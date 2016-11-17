@@ -52,7 +52,7 @@ of your business services.
 ## Examples
 
 ```
-$ sudo ./nagios-report.pl -h build-el6.resnet.bris.ac.uk -s Ping -t Today
+$ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today
 $VAR1 = 'WARNING';
 $VAR2 = {
           'Total' => {
@@ -130,16 +130,16 @@ $VAR12 = {
 ```
 
 ```
-$ sudo ./nagios-report.pl -h build-el6.resnet.bris.ac.uk -s Ping -t Today -o uptime
+$ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today -o uptime
 98.065%
 ```
 
 ```
-$ sudo ./nagios-report.pl -h build-el6.resnet.bris.ac.uk -s Ping -t Today -o uptime -v
-Total uptime percentage for service Ping on host build-el6.resnet.bris.ac.uk during period Today is 98.065%
+$ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today -o uptime -v
+Total uptime percentage for service Ping on host server.example.co.uk during period Today is 98.065%
 ```
 
 ```
-$ sudo ./nagios-report.pl -h build-el6.resnet.bris.ac.uk -s Ping -t Today -o downtime
+$ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today -o downtime
 0d 0h 27m 52s
 ```
