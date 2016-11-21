@@ -21,21 +21,21 @@ my $outputformat = 'dump';
 my $verbose = 0;
 
 # Default to print hostname in output
-my $printhost = 1;
+my $dontprinthost = 0;
 
 # Variables with no default
 my ($host, $service);
 
 # Read in command-line options
 GetOptions (
-	'cgi=s'          => \$cgi,
-	'u|user=s'       => \$user,
-	'h|host=s'       => \$host,
-	's|service=s'    => \$service,
-	't|timeperiod=s' => \$timeperiod,
-	'o|output=s'     => \$outputformat,
-	'v|verbose'      => \$verbose,
-	'p|printhost'    => \$printhost,
+	'cgi=s'           => \$cgi,
+	'u|user=s'        => \$user,
+	'h|host=s'        => \$host,
+	's|service=s'     => \$service,
+	't|timeperiod=s'  => \$timeperiod,
+	'o|output=s'      => \$outputformat,
+	'v|verbose'       => \$verbose,
+	'd|dontprinthost' => \$dontprinthost,
 );
 
 # Make sure mandatory vars are set
@@ -93,7 +93,7 @@ if ($outputformat eq 'dump') {
 	print Dumper(%hash);
 } elsif ($outputformat eq 'uptime') {
 	if ($verbose) {
-		if ($printhost) {
+		if (!$dontprinthost) {
 			print "Total uptime percentage for service $service on host $host during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
 		} else {
 			print "Total uptime percentage for service $service during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
@@ -103,7 +103,7 @@ if ($outputformat eq 'dump') {
 	}
 } elsif ($outputformat eq 'downtime') {
         if ($verbose) {
-		if ($printhost) {
+		if (!$dontprinthost) {
 			print "Total down duration for service $service on host $host during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
 		} else {
 			print "Total down duration for service $service during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";

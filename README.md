@@ -42,7 +42,7 @@ Define the output format. Defaults to `dump`. Choose from:
 
 Define verbosity of output. Defaults to `false`. Adds full-sentence output to output formats `uptime` and `downtime` rather than just printing the number.
 
-* `p|printhost`
+* `d|dontprinthost`
 
 Define whether to print the hostname in verbose output. Defaults to `true`.
 
@@ -144,7 +144,7 @@ Total uptime percentage for service Ping on host server.example.co.uk during per
 ```
 
 ```
-$ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today -o uptime -v --p 0
+$ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today -o uptime -v -d
 Total uptime percentage for service Ping during period Today is 98.065%
 ```
 
