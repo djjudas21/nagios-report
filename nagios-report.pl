@@ -89,13 +89,13 @@ if ($outputformat eq 'dump') {
 	print Dumper(%hash);
 } elsif ($outputformat eq 'uptime') {
 	if ($verbose) {
-		print "Total uptime percentage for service $service on host $host during period $timeperiod is $hash{'OK'}{'Total'}{'Percent'}\n";
+		print "Total uptime percentage for service $service on host $host during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
 	} else {
 		print "$hash{'OK'}{'Total'}{'Percent'}\n";
 	}
 } elsif ($outputformat eq 'downtime') {
         if ($verbose) {
-		print "Total down duration for service $service on host $host during period $timeperiod is $hash{'CRITICAL'}{'Total'}{'Time'}\n";
+		print "Total down duration for service $service on host $host during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
 	} else {
 		print "$hash{'CRITICAL'}{'Total'}{'Time'}\n";
 	}
