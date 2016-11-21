@@ -20,6 +20,9 @@ my $timeperiod = 'lastmonth';
 my $outputformat = 'dump';
 my $verbose = 0;
 
+# Default to print hostname in output
+my $printhost = 1;
+
 # Variables with no default
 my ($host, $service);
 
@@ -32,6 +35,7 @@ GetOptions (
 	't|timeperiod=s' => \$timeperiod,
 	'o|output=s'     => \$outputformat,
 	'v|verbose'      => \$verbose,
+	'p|printhost'    => \$printhost,
 );
 
 # Make sure mandatory vars are set
@@ -89,13 +93,21 @@ if ($outputformat eq 'dump') {
 	print Dumper(%hash);
 } elsif ($outputformat eq 'uptime') {
 	if ($verbose) {
-		print "Total uptime percentage for service $service on host $host during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
+		if ($printhost) {
+			print "Total uptime percentage for service $service on host $host during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
+		} else {
+			print "Total uptime percentage for service $service during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
+		}
 	} else {
 		print "$hash{'OK'}{'Total'}{'Percent'}\n";
 	}
 } elsif ($outputformat eq 'downtime') {
         if ($verbose) {
-		print "Total down duration for service $service on host $host during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
+		if ($printhost) {
+			print "Total down duration for service $service on host $host during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
+		} else {
+			print "Total down duration for service $service during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
+		}
 	} else {
 		print "$hash{'CRITICAL'}{'Total'}{'Time'}\n";
 	}

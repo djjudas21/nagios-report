@@ -42,6 +42,10 @@ Define the output format. Defaults to `dump`. Choose from:
 
 Define verbosity of output. Defaults to `false`. Adds full-sentence output to output formats `uptime` and `downtime` rather than just printing the number.
 
+* `p|printhost`
+
+Define whether to print the hostname in verbose output. Defaults to `true`.
+
 ## Integration with BPI
 
 [Nagios BPI](https://exchange.nagios.org/directory/Addons/Components/Nagios-Business-Process-Intelligence-(BPI)/details) is a tool that
@@ -137,6 +141,11 @@ $ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today -o uptime
 ```
 $ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today -o uptime -v
 Total uptime percentage for service Ping on host server.example.co.uk during period Today is 98.065%
+```
+
+```
+$ sudo ./nagios-report.pl -h server.example.co.uk -s Ping -t Today -o uptime -v --p 0
+Total uptime percentage for service Ping during period Today is 98.065%
 ```
 
 ```
