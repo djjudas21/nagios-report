@@ -46,6 +46,11 @@ Define verbosity of output. Defaults to `false`. Adds full-sentence output to ou
 
 Define whether to print the hostname in verbose output. Defaults to `true`.
 
+* `r|recipients`
+
+The email address to send the report to. This option may be specified more than once to send multiple copies of the email.
+Leave blank to print the output to stdout (which causes cron to send an email instead).
+
 ## Integration with BPI
 
 [Nagios BPI](https://exchange.nagios.org/directory/Addons/Components/Nagios-Business-Process-Intelligence-(BPI)/details) is a tool that

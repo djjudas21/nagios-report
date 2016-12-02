@@ -5,6 +5,8 @@ use warnings;
 use Getopt::Long;
 use URI::Escape;
 use Data::Dumper;
+use Net::SMTP;
+use Sys::Hostname;
 
 # Set default options
 # Path to Nagios availability CGI
@@ -25,6 +27,7 @@ my $dontprinthost = 0;
 
 # Variables with no default
 my ($host, $service);
+my @recipients;
 
 # Read in command-line options
 GetOptions (
@@ -36,6 +39,7 @@ GetOptions (
 	'o|output=s'      => \$outputformat,
 	'v|verbose'       => \$verbose,
 	'd|dontprinthost' => \$dontprinthost,
+	'r|recipients=s'  => \@recipients,
 );
 
 # Make sure mandatory vars are set
@@ -89,28 +93,55 @@ foreach my $row (@table) {
 	}
 }
 
+# This will contain the message to be printed
+my $message;
+
 if ($outputformat eq 'dump') {
-	print Dumper(%hash);
+	 $message = Dumper(%hash);
 } elsif ($outputformat eq 'uptime') {
 	if ($verbose) {
 		if (!$dontprinthost) {
-			print "Total uptime percentage for service $service on host $host during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
+			$message = "Total uptime percentage for service $service on host $host during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
 		} else {
-			print "Total uptime percentage for service $service during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
+			$message = "Total uptime percentage for service $service during period $timeperiod was $hash{'OK'}{'Total'}{'Percent'}\n";
 		}
 	} else {
-		print "$hash{'OK'}{'Total'}{'Percent'}\n";
+		$message = "$hash{'OK'}{'Total'}{'Percent'}\n";
 	}
 } elsif ($outputformat eq 'downtime') {
         if ($verbose) {
 		if (!$dontprinthost) {
-			print "Total down duration for service $service on host $host during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
+			$message = "Total down duration for service $service on host $host during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
 		} else {
-			print "Total down duration for service $service during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
+			$message = "Total down duration for service $service during period $timeperiod was $hash{'CRITICAL'}{'Total'}{'Time'}\n";
 		}
 	} else {
-		print "$hash{'CRITICAL'}{'Total'}{'Time'}\n";
+		$message = "$hash{'CRITICAL'}{'Total'}{'Time'}\n";
 	}
 } else {
 	print "Must supply valid -o|--output\n";
+	exit;
+}
+
+if (@recipients) {
+	# Send email here
+	my $smtp = Net::SMTP->new('127.0.0.1');
+
+	$smtp->mail('root');
+	$smtp->recipient(@recipients, { Notify => ['FAILURE'], SkipBad => 1 });
+
+	$smtp->data();
+
+	$smtp->datasend("From: root\n");
+	my $tostring = join(',', @recipients);
+	$smtp->datasend("To: $tostring\n");
+	$smtp->datasend("Subject: Availability info for $service\n");
+	$smtp->datasend("\n");
+	$smtp->datasend($message);
+	$smtp->dataend();
+
+	$smtp->quit();
+} else {
+	# Let cron send the email
+	print $message;
 }
